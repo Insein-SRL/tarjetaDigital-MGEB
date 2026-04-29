@@ -113,7 +113,6 @@
       background: linear-gradient(90deg, transparent, #d8e3e8 30%, #d8e3e8 70%, transparent);
     }
 
-    /* ── BOTÓN AGREGAR CONTACTO ── */
     .btn-add {
       display: flex;
       align-items: center;
@@ -131,6 +130,7 @@
       font-weight: 700;
       letter-spacing: 1px;
       text-transform: uppercase;
+      text-decoration: none;
       cursor: pointer;
       transition: background .2s, transform .15s, box-shadow .2s;
       animation: up .45s .28s cubic-bezier(.22,1,.36,1) both;
@@ -141,7 +141,6 @@
       transform: translateY(-2px);
     }
     .btn-add:active { transform: translateY(0); }
-    .btn-add.ok     { background: var(--green); }
 
     /* ── BOTONES DE ACCIÓN ── */
     .actions {
@@ -251,17 +250,14 @@
   <div class="sep"></div>
 
   <!-- ── AGREGAR A CONTACTOS ── -->
-  <button class="btn-add" id="btn-vcf" onclick="descargarContacto()">
+  <a class="btn-add" id="btn-tel" href="tel:+59172987377">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
          stroke="currentColor" stroke-width="2.2"
          stroke-linecap="round" stroke-linejoin="round">
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-      <circle cx="12" cy="7" r="4"/>
-      <line x1="12" y1="14" x2="12" y2="20"/>
-      <line x1="9" y1="17" x2="15" y2="17"/>
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.92 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.83 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
     </svg>
     Agregar a contactos
-  </button>
+  </a>
 
   <!-- ── LINKS ── -->
   <div class="actions">
@@ -327,7 +323,8 @@
   phone:    "+591 72987377",   /* número visible */
   whatsapp: "59172987377",       /* sin + ni espacios */
   email:    "marcelo.espana@inseinsrl.com",
-};
+  };
+
   /* ════════════════════════════════════════════ */
 
   /* Inyectar datos en el HTML */
@@ -338,41 +335,8 @@
   document.getElementById('email-addr').textContent   = CONTACT.email;
   document.getElementById('link-wa').href             = 'https://wa.me/' + CONTACT.whatsapp;
   document.getElementById('link-email').href          = 'mailto:' + CONTACT.email;
+  document.getElementById('btn-tel').href             = 'tel:+' + CONTACT.whatsapp;
   document.title                                      = CONTACT.name + ' \u2014 INSEIN SRL';
-
-  /* Generar y descargar vCard */
-  function descargarContacto() {
-    var vcf = [
-      "BEGIN:VCARD",
-      "VERSION:3.0",
-      "FN:"    + CONTACT.name,
-      "ORG:"   + CONTACT.company,
-      "TITLE:" + CONTACT.role,
-      "TEL;TYPE=CELL:" + CONTACT.phone,
-      "EMAIL:" + CONTACT.email,
-      "URL:"   + CONTACT.web,
-      "END:VCARD"
-    ].join("\r\n");
-
-    var blob = new Blob([vcf], { type: "text/vcard;charset=utf-8" });
-    var url  = URL.createObjectURL(blob);
-    var a    = document.createElement('a');
-    a.href     = url;
-    a.download = CONTACT.name.replace(/\s+/g, '_') + ".vcf";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-
-    /* Feedback visual */
-    var btn = document.getElementById('btn-vcf');
-    btn.classList.add('ok');
-    btn.textContent = '\u2713 Contacto guardado';
-    setTimeout(function() {
-      btn.classList.remove('ok');
-      btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><line x1="12" y1="14" x2="12" y2="20"/><line x1="9" y1="17" x2="15" y2="17"/></svg> Agregar a contactos';
-    }, 2500);
-  }
 </script>
 </body>
 </html>
